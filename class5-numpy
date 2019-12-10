@@ -1,0 +1,31 @@
+import numpy as np
+#print(np)
+#调用矩阵的基本属性
+a = np.arange(15).reshape((3,5))   #3行5列的矩阵
+b = np.ones((3,5))*5
+#a = np.array([1,2,3],dtype=np.float64)   #指定为float64
+#a = np.linspace(0,1,16)
+#a = np.zeros((3,5))    #构造纯0矩阵，(3,)表示一维矩阵，(3,5)表示二维矩阵
+#a = np.ones((3,2))    #构造全1矩阵，全n矩阵直接在后面×n
+#a = np.ones((3,2))*6
+#a = np.eye(3)*2    #对角阵
+#a = np.diag([1,2,3])*2  
+
+#a = a[:2,1]  #取【1,6】
+#b = a[:2,1::2]
+
+
+print(b)
+c = a >b
+print(a.sum())
+print(c)
+print(type(c))
+
+#a = np.arange(15)
+print(a,type(a))
+print(a.ndim)
+print(a.shape)   #矩阵维度
+print(a.size)   #内存个数
+print(a.itemsize)
+print(a.data)
+print(a.dtype.name)
