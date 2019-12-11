@@ -1,0 +1,40 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def testpd():
+	df = pd.read_csv("test1.csv")
+	'''
+	print(df.head(10))   #列出前10项纪录
+	print(df.dtypes)    #所有列的数据类型
+	print(df.columns)
+	print(df.axes)    #列出行标签和列名
+	print(df.ndim)    #维度个数
+	print(df.size)    #元素个数
+	print(df.shape)
+	print(df.values)   #数据的numpy表示   
+	'''
+	'''
+	print(df.describe())    #数据的描述性统计
+	df_Age = df.groupby(['Age'])
+	print(df_Age)
+	print(df_Age.mean())
+	print(df.groupby('Age')[['PassengerId']].mean())   #计算每个游客Id的平均年龄
+	print(df['PassengerId'])
+	print(df[['Age','PassengerId']])
+	'''
+	'''
+	print(df.loc[50:60,['Age','PassengerId','Name']])
+	print(df.iloc[1:4])
+	print(df.iloc[:,2:5])
+	df_sorted = df.sort_values(by ='Age')
+	print(df_sorted)
+	'''
+	flights = pd.read_csv("test1.csv")   #读取缺失数据
+	print(flights) 
+
+
+def main():
+	testpd()
+
+if __name__ == '__main__':
+	main()
