@@ -1,0 +1,35 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+X = np.linspace(-np.pi, np.pi, 256, endpoint=True)
+C,S = np.cos(X), np.sin(X)
+
+#plt.plot(X,C)
+#plt.plot(X,S)
+from pylab import *
+figure(figsize=(10,6), dpi=80)
+#xticks( [-np.pi, -np.pi/2, 0, np.pi/2, np.pi])
+#yticks([-1, 0, +1])
+xticks([-np.pi, -np.pi/2, 0, np.pi/2, np.pi],[r'$-\pi$', r'$-\pi/2$', r'$0$', r'$+\pi/2$', r'$+\pi$'])
+yticks([-1, 0, +1],[r'$-1$', r'$0$', r'$+1$'])
+
+ax = gca()
+ax.spines['right'].set_color('none')
+ax.spines['top'].set_color('none')
+ax.xaxis.set_ticks_position('bottom')
+ax.spines['bottom'].set_position(('data',0))
+ax.yaxis.set_ticks_position('left')
+ax.spines['left'].set_position(('data',0))
+
+for label in ax.get_xticklabels() + ax.get_yticklabels():
+    label.set_fontsize(16)
+    label.set_bbox(dict(facecolor='white', edgecolor='None', alpha=0.65 ))
+
+#plot(X, C, color="blue", linewidth=2.5, linestyle="-")
+#plot(X, S, color="red",  linewidth=2.5, linestyle="-")
+plot(X, C, color="blue", linewidth=2.5, linestyle="-", label="cosine")
+plot(X, S, color="red",  linewidth=2.5, linestyle="-", label="sine")
+
+legend(loc='upper left')
+
+plt.show()
