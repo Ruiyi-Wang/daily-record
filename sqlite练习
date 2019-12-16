@@ -27,6 +27,16 @@ def creatdb():
 	conn.commit()
 	print('Records created successfully')
 	conn.close()
+	
+	cursor = c.execute("SELECT id, name, address, salary  from COMPANY")     #从前面创建的COMPANY表中获取并显示记录
+	for row in cursor:
+		print ("ID = ", row[0])
+		print ("NAME = ", row[1])
+		print ("ADDRESS = ", row[2])
+		print ("SALARY = ", row[3], "\n")
+	print ('Operation done successfully')      
+	conn.close()
+
 
 
 def main():
