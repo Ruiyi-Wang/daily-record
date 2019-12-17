@@ -51,6 +51,23 @@ def creatdb():
 
 	print('Operation done successfully');
 	conn.close()
+	
+	
+	
+	c.execute("DELETE from COMPANY where ID=2;")   #删除表中的一条记录，下面再重新显示更新的纪录
+	conn.commit()
+	print('Total number of rows updated :'), conn.total_changes
+
+	cursor = conn.execute("SELECT id, name, address, salary  from COMPANY")
+	for row in cursor:
+		print('ID ='), row[0]
+		print('NAME ='), row[1]
+		print('ADDRESS ='), row[2]
+		print('SALARY ='), row[3], "\n"
+
+	print('Operation done successfully');
+	conn.close()
+
 
 
 def main():
