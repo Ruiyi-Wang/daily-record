@@ -1,7 +1,24 @@
 import io
 import sys
-import requests
+
+import urllib.request
+import re
+# from urllib import request
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='gb18030')
-url = 'http://www.cntour.cn/'     #中国旅游网网站
-strhml = requests.get(url)
-print(strhml.text)
+
+url=r"http://www.baidu.com/"
+
+#创建自定义对象
+req=urllib.request.Request(url)
+response=urllib.request.urlopen(req).read().decode()
+
+#发送请求，获取响应信息，request自动创建请求对象
+response=urllib.request.urlopen(url).read().decode()  #解码 ... 编码encode
+#response=request.urlopen(url).read()
+pat=r"<title>(.*?)</title>"   #通过正则表达式进行数据清洗
+data=re.findall(pat,response)   #获取<title>  </title>之间的信息
+
+#print(response)
+#print(len(response))
+#print(type(response))
+print(data)
