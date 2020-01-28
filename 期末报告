@@ -1,0 +1,47 @@
+import io
+import sys
+import pymysql
+import requests
+import json
+import re
+from bs4 import BeautifulSoup
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='gb18030')
+
+class FinancialData():
+
+	def __init__(self):
+		#服务器域名
+		self.server = 'http://quotes.money.163.com/'
+		self.cwnb = 'http://quotes.money.163.com/hkstock/cwsj_'
+		#主要财务指标
+		self.cwzb_dict = {'EPS':'基本每股收益','EPS_DILUTED':'摊薄每股收益','GROSS_MARGIN':'毛利率',
+		'CAPITAL_ADEQUACY':'资本充足率','LOANS_DEPOSITS':'贷款回报率','ROTA':'总资产收益率',
+		'ROEQUITY':'净资产收益率','CURRENT_RATIO':'流动比率','QUICK_RATIO':'速动比率',
+		'ROLOANS':'存贷比','INVENTORY_TURNOVER':'存货周转率','GENERAL_ADMIN_RATIO':'管理费用比率',
+		'TOTAL_ASSET2TURNOVER':'资产周转率','FINCOSTS_GROSSPROFIT':'财务费用比率','TURNOVER_CASH':'销售现金比率','YEAREND_DATE':'报表日期'}
+		#利润表
+		self.lrb_dict = {'TURNOVER':'总营收','OPER_PROFIT':'经营利润','PBT':'除税前利润',
+		'NET_PROF':'净利润','EPS':'每股基本盈利','DPS':'每股派息',
+		'INCOME_INTEREST':'利息收益','INCOME_NETTRADING':'交易收益','INCOME_NETFEE':'费用收益','YEAREND_DATE':'报表日期'}
+		#资产负债表
+		self.fzb_dict = {
+			'FIX_ASS':'固定资产','CURR_ASS':'流动资产','CURR_LIAB':'流动负债',
+			'INVENTORY':'存款','CASH':'现金及银行存结','OTHER_ASS':'其他资产',
+			'TOTAL_ASS':'总资产','TOTAL_LIAB':'总负债','EQUITY':'股东权益',
+			'CASH_SHORTTERMFUND':'库存现金及短期资金','DEPOSITS_FROM_CUSTOMER':'客户存款',
+			'FINANCIALASSET_SALE':'可供出售之证券','LOAN_TO_BANK':'银行同业存款及贷款',
+			'DERIVATIVES_LIABILITIES':'金融负债','DERIVATIVES_ASSET':'金融资产','YEAREND_DATE':'报表日期'}
+		#现金流表
+		self.llb_dict = {
+			'CF_NCF_OPERACT':'经营活动产生的现金流','CF_INT_REC':'已收利息','CF_INT_PAID':'已付利息',
+			'CF_INT_REC':'已收股息','CF_DIV_PAID':'已派股息','CF_INV':'投资活动产生现金流',
+			'CF_FIN_ACT':'融资活动产生现金流','CF_BEG':'期初现金及现金等价物','CF_CHANGE_CSH':'现金及现金等价物净增加额',
+			'CF_END':'期末现金及现金等价物','CF_EXCH':'汇率变动影响','YEAREND_DATE':'报表日期'}
+		#总表
+		self.table_dict = {'cwzb':self.cwzb_dict,'lrb':self.lrb_dict,'fzb':self.fzb_dict,'llb':self.llb_dict}
+		#请求头
+		self.headers = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+			'Accept-Encoding': 'gzip, deflate',
+			'Accept-Language': 'zh-CN,zh;q=0.8',
+			'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.109 Safari/537.36'}
