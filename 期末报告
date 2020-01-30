@@ -45,3 +45,34 @@ class FinancialData():
 			'Accept-Encoding': 'gzip, deflate',
 			'Accept-Language': 'zh-CN,zh;q=0.8',
 			'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.109 Safari/537.36'}
+		
+		
+		target_url = 'http://quotes.money.163.com/hkstock/cwsj_00700.html'
+                req = requests.get(url = target_url, headers = headers)
+    		req.encoding = 'utf-8'
+   	 	html = req.text
+    		page_bf = BeautifulSoup(html, 'lxml')
+    		#股票名称，股票代码
+    		name = page_bf.find_all('span', class_ = 'name')[0].string
+    		code = page_bf.find_all('span', class_ = 'code')[0].string
+    		code = re.findall('\d+',code)[0]
+    		#打印股票信息
+    		print(name + ':' + code)
+    		print('')
+    		#存储各个表名的列表
+    		table_name_list = []
+    		table_date_list = []
+    		each_date_list = []
+    		url_list = []
+    		#表名和表时间
+    		table_name = page_bf.find_all('div', class_ = 'titlebar3')
+    		for each_table_name in table_name:
+        	#表名
+        	table_name_list.append(each_table_name.span.string)
+        	#表时间
+        	for each_table_date in each_table_name.div.find_all('select', id = re.compile('.+1$')):
+            		url_list.append(re.findall('(\w+)1',each_table_date.get('id'))[0])
+            		for each_date in each_table_date.find_all('option'):
+                		each_date_list.append(each_date.string)
+            			table_date_list.append(each_date_list)
+            			each_date_list = []
