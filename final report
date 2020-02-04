@@ -75,3 +75,55 @@ class FinancialData():
 				table_date_list.append(each_date_list)
 				each_date_list = []
 		return name,table_name_list,table_date_list,url_list
+	
+	def insert_tables(self, name, table_name_list,table_date_list, url_list):
+		#打开数据库连接:host-连接主机地址,port-端口号,user-用户名,passwd-用户密码,db-数据库名,charset-编码
+		conn = pymysql.connect(host='localhost', port=3306, user='root', passwd='112900',db='financialdata',charset='utf8')
+		#使用cursor()方法获取操作游标
+		cursor = conn.cursor()  
+		#插入信息
+		for i in range(len(table_name_list)):
+			sys.stdout.write('    [正在下载       ]    %s' % table_name_list[i] + '\r')
+			#获取数据地址
+			url = self.server + 'hk/service/cwsj_service.php?symbol={}&start={}&end={}&type={}&unit=yuan'.format(code,table_date_list[i][-1],table_date_list[i][0],url_list[i])
+			req_table = requests.get(url = url, headers = self.headers)
+			table = req_table.json()
+			nums = len(table)
+			value_dict = {}
+			for num in range(nums):
+				sys.stdout.write('    [正在下载 %.2f%%]   ' % (((num+1) / nums)*100) + '\r')
+				sys.stdout.flush()
+				value_dict['股票名'] = name
+				value_dict['股票代码'] = code
+				for key, value in table[i].items():
+					if key in self.table_dict[url_list[i]]:
+						value_dict[self.table_dict[url_list[i]][key]] = value
+
+				sql1 = """
+				INSERT INTO %s (`股票名`,`股票代码`,`报表日期`) VALUES ('%s','%s','%s')""" % (url_list[i],value_dict['股票名'],value_dict['股票代码'],value_dict['报表日期'])
+				try:
+					cursor.execute(sql1)
+					# 执行sql语句
+					conn.commit()
+				except:
+					# 发生错误时回滚
+					conn.rollback()
+
+				for key, value in value_dict.items():
+					if key not in ['股票名','股票代码','报表日期']:
+						sql2 = """
+						UPDATE %s SET %s='%s' WHERE `股票名`='%s' AND `报表日期`='%s'""" % (url_list[i],key,value,value_dict['股票名'],value_dict['报表日期'])
+						try:
+							cursor.execute(sql2)
+							# 执行sql语句
+							conn.commit()
+						except:
+							# 发生错误时回滚
+							conn.rollback()
+				value_dict = {}
+			print('    [下载完成 ')
+
+		# 关闭数据库连接
+		cursor.close()  
+		conn.close()
+
