@@ -126,4 +126,17 @@ class FinancialData():
 		# 关闭数据库连接
 		cursor.close()  
 		conn.close()
+if __name__ == '__main__':
+	print('*' * 100)
+	print('\t\t\t\t\t财务数据下载助手\n')
+	print('  Gihub:https://github.com/Ruiyi-Wang\n')
+	print('*' * 100)
+	fd = FinancialData()
+	#上市股票地址
+	code = input('请输入股票代码:')
+
+	name,table_name_list,table_date_list,url_list = fd.get_informations(fd.cwnb + code + '.html')
+	print('\n  %s:(%s)财务数据下载中！\n' % (name,code))
+	fd.insert_tables(name,table_name_list,table_date_list,url_list)
+	print('\n  %s:(%s)财务数据下载完成！' % (name,code)) 
 
